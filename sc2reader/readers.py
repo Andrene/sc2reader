@@ -12,6 +12,7 @@ from sc2reader.events.game import (
     UpdateTargetPointCommandEvent,
     UpdateTargetUnitCommandEvent,
     UserOptionsEvent,
+    DialogControlEvent,
     create_command_event,
     create_control_group_event,
 )
@@ -462,7 +463,7 @@ class GameEventsReader_Base:
             52: (None, self.trigger_purchase_exit_event),
             53: (None, self.trigger_planet_mission_launched_event),
             54: (None, self.trigger_planet_panel_canceled_event),
-            55: (None, self.trigger_dialog_control_event),
+            55: (DialogControlEvent, self.trigger_dialog_control_event),
             56: (None, self.trigger_sound_length_sync_event),
             57: (None, self.trigger_conversation_skipped_event),
             58: (None, self.trigger_mouse_clicked_event),
