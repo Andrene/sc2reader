@@ -778,7 +778,7 @@ class DialogControlEvent(GameEvent):
         self.control_id = data["control_id"]
 
         #: How dialog was interacted with
-        self.event_type = self.data["event_type"]
+        self.event_type = data["event_type"]
 
         #: Data specific to event type such as changes or clicks
-        self.event_data = self.data["event_data"]
+        self.event_data = data["event_data"]
