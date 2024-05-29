@@ -105,7 +105,7 @@ class creep_tracker:
     def __init__(self, replay):
         # if the debug option is selected, minimaps will be printed to a file
         ##and a stringIO containing the minimap image will be saved for
-        ##every minite in the game and the minimap with creep highlighted
+        ##every minute in the game and the minimap with creep highlighted
         ## will be printed out.
         self.debug = replay.opt["debug"]
         ##This list contains creep spread area for each player
