@@ -123,9 +123,9 @@ class creep_tracker:
         self.unit_name_to_radius = {"CreepTumor": 10, "Hatchery": 8, "NydusCanal": 5}
         self.radius_to_coordinates = dict()
         for x in self.unit_name_to_radius:
-            self.radius_to_coordinates[
-                self.unit_name_to_radius[x]
-            ] = self.radius_to_map_positions(self.unit_name_to_radius[x])
+            self.radius_to_coordinates[self.unit_name_to_radius[x]] = (
+                self.radius_to_map_positions(self.unit_name_to_radius[x])
+            )
         # Get map information
         replayMap = replay.map
         # extract image from replay package

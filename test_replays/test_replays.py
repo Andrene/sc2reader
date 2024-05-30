@@ -170,7 +170,9 @@ class TestReplays(unittest.TestCase):
         replay = sc2reader.load_replay("test_replays/1.1.3.16939/11.SC2Replay")
         self.assertEqual(replay.expansion, "WoL")
         first = [player for player in replay.players if player.name == "명지대학교"][0]
-        second = [player for player in replay.players if player.name == "티에스엘사기수"][0]
+        second = [
+            player for player in replay.players if player.name == "티에스엘사기수"
+        ][0]
         self.assertEqual(first.url, "https://starcraft2.com/en-us/profile/3/1/258945")
         self.assertEqual(second.url, "https://starcraft2.com/en-us/profile/3/1/102472")
         self.assertEqual(replay.messages[0].text, "sc2.replays.net")
