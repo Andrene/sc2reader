@@ -105,7 +105,7 @@ class creep_tracker:
     def __init__(self, replay):
         # if the debug option is selected, minimaps will be printed to a file
         ##and a stringIO containing the minimap image will be saved for
-        ##every minite in the game and the minimap with creep highlighted
+        ##every minute in the game and the minimap with creep highlighted
         ## will be printed out.
         self.debug = replay.opt["debug"]
         ##This list contains creep spread area for each player
@@ -123,9 +123,9 @@ class creep_tracker:
         self.unit_name_to_radius = {"CreepTumor": 10, "Hatchery": 8, "NydusCanal": 5}
         self.radius_to_coordinates = dict()
         for x in self.unit_name_to_radius:
-            self.radius_to_coordinates[
-                self.unit_name_to_radius[x]
-            ] = self.radius_to_map_positions(self.unit_name_to_radius[x])
+            self.radius_to_coordinates[self.unit_name_to_radius[x]] = (
+                self.radius_to_map_positions(self.unit_name_to_radius[x])
+            )
         # Get map information
         replayMap = replay.map
         # extract image from replay package

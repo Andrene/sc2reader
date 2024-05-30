@@ -77,16 +77,16 @@ without renaming to a 'Saved' subdirectory every 10 seconds. The depth 0 option
 keeps the script from looking into the 'Saved' subdirectory.
 
     sc2autosave                                                             \
-        --source ~/My\\ Documents/Starcraft\\ II/Accounts/.../Mutliplayer     \
-        --dest ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplater/Saved \
+        --source ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplayer     \
+        --dest ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplayer/Saved \
         --period 10                                                         \
         --depth 0
 
 This next configuration runs in batch mode using the default renaming format.
 
     sc2autosave                                                             \
-        --source ~/My\\ Documents/Starcraft\\ II/Accounts/.../Mutliplayer     \
-        --dest ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplater/Saved \
+        --source ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplayer     \
+        --dest ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplayer/Saved \
         --rename
 
     (ZvP) Lost Temple: ShadesofGray(Z) vs Trisfall(P).SC2Replay
@@ -96,8 +96,8 @@ Here is a heavily customized format that organizes replays into subdirectories
 by replay format and favors ShadesofGray in the player and team orderings.
 
     sc2autosave                                                             \
-        --source ~/My\\ Documents/Starcraft\\ II/Accounts/.../Mutliplayer     \
-        --dest ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplater/Saved \
+        --source ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplayer     \
+        --dest ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplayer/Saved \
         --rename "{:format}/{:matchup} on {:map}: {:teams}"                 \
         --player-format "{:name}({:play_race})"                             \
         --team-order-by number                                              \
@@ -112,8 +112,8 @@ strict player and team ordering by number with no exceptions and formats game
 length to show both minutes and seconds.
 
     sc2autosave                                                             \
-        --source ~/My\\ Documents/Starcraft\\ II/Accounts/.../Mutliplayer     \
-        --dest ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplater/Saved \
+        --source ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplayer     \
+        --dest ~/My\\ Documents/Starcraft\\ II/Accounts/.../Multiplayer/Saved \
         --rename "{:matchup}/({:length}) {:map}: {:teams}"                  \
         --player-format "{:name}({:play_race})"                             \
         --team-order-by number                                              \

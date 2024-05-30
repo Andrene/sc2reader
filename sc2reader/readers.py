@@ -12,6 +12,7 @@ from sc2reader.events.game import (
     UpdateTargetPointCommandEvent,
     UpdateTargetUnitCommandEvent,
     UserOptionsEvent,
+    DialogControlEvent,
     create_command_event,
     create_control_group_event,
 )
@@ -39,48 +40,68 @@ class InitDataReader:
             user_initial_data=[
                 dict(
                     name=data.read_aligned_string(data.read_uint8()),
-                    clan_tag=data.read_aligned_string(data.read_uint8())
-                    if replay.base_build >= 24764 and data.read_bool()
-                    else None,
-                    clan_logo=DepotFile(data.read_aligned_bytes(40))
-                    if replay.base_build >= 27950 and data.read_bool()
-                    else None,
-                    highest_league=data.read_uint8()
-                    if replay.base_build >= 24764 and data.read_bool()
-                    else None,
-                    combined_race_levels=data.read_uint32()
-                    if replay.base_build >= 24764 and data.read_bool()
-                    else None,
+                    clan_tag=(
+                        data.read_aligned_string(data.read_uint8())
+                        if replay.base_build >= 24764 and data.read_bool()
+                        else None
+                    ),
+                    clan_logo=(
+                        DepotFile(data.read_aligned_bytes(40))
+                        if replay.base_build >= 27950 and data.read_bool()
+                        else None
+                    ),
+                    highest_league=(
+                        data.read_uint8()
+                        if replay.base_build >= 24764 and data.read_bool()
+                        else None
+                    ),
+                    combined_race_levels=(
+                        data.read_uint32()
+                        if replay.base_build >= 24764 and data.read_bool()
+                        else None
+                    ),
                     random_seed=data.read_uint32(),
                     race_preference=data.read_uint8() if data.read_bool() else None,
-                    team_preference=data.read_uint8()
-                    if replay.base_build >= 16561 and data.read_bool()
-                    else None,
+                    team_preference=(
+                        data.read_uint8()
+                        if replay.base_build >= 16561 and data.read_bool()
+                        else None
+                    ),
                     test_map=data.read_bool(),
                     test_auto=data.read_bool(),
                     examine=data.read_bool() if replay.base_build >= 21955 else None,
-                    custom_interface=data.read_bool()
-                    if replay.base_build >= 24764
-                    else None,
-                    test_type=data.read_uint32()
-                    if replay.base_build >= 34784
-                    else None,
+                    custom_interface=(
+                        data.read_bool() if replay.base_build >= 24764 else None
+                    ),
+                    test_type=(
+                        data.read_uint32() if replay.base_build >= 34784 else None
+                    ),
                     observe=data.read_bits(2),
-                    hero=data.read_aligned_string(data.read_bits(9))
-                    if replay.base_build >= 34784
-                    else None,
-                    skin=data.read_aligned_string(data.read_bits(9))
-                    if replay.base_build >= 34784
-                    else None,
-                    mount=data.read_aligned_string(data.read_bits(9))
-                    if replay.base_build >= 34784
-                    else None,
-                    toon_handle=data.read_aligned_string(data.read_bits(7))
-                    if replay.base_build >= 34784
-                    else None,
-                    scaled_rating=data.read_uint32() - 2147483648
-                    if replay.base_build >= 54518 and data.read_bool()
-                    else None,
+                    hero=(
+                        data.read_aligned_string(data.read_bits(9))
+                        if replay.base_build >= 34784
+                        else None
+                    ),
+                    skin=(
+                        data.read_aligned_string(data.read_bits(9))
+                        if replay.base_build >= 34784
+                        else None
+                    ),
+                    mount=(
+                        data.read_aligned_string(data.read_bits(9))
+                        if replay.base_build >= 34784
+                        else None
+                    ),
+                    toon_handle=(
+                        data.read_aligned_string(data.read_bits(7))
+                        if replay.base_build >= 34784
+                        else None
+                    ),
+                    scaled_rating=(
+                        data.read_uint32() - 2147483648
+                        if replay.base_build >= 54518 and data.read_bool()
+                        else None
+                    ),
                 )
                 for i in range(data.read_bits(5))
             ],
@@ -94,27 +115,29 @@ class InitDataReader:
                     random_races=data.read_bool(),
                     battle_net=data.read_bool(),
                     amm=data.read_bool(),
-                    ranked=data.read_bool()
-                    if replay.base_build >= 34784 and replay.base_build < 38215
-                    else None,
+                    ranked=(
+                        data.read_bool()
+                        if replay.base_build >= 34784 and replay.base_build < 38215
+                        else None
+                    ),
                     competitive=data.read_bool(),
                     practice=data.read_bool() if replay.base_build >= 34784 else None,
-                    cooperative=data.read_bool()
-                    if replay.base_build >= 34784
-                    else None,
+                    cooperative=(
+                        data.read_bool() if replay.base_build >= 34784 else None
+                    ),
                     no_victory_or_defeat=data.read_bool(),
-                    hero_duplicates_allowed=data.read_bool()
-                    if replay.base_build >= 34784
-                    else None,
+                    hero_duplicates_allowed=(
+                        data.read_bool() if replay.base_build >= 34784 else None
+                    ),
                     fog=data.read_bits(2),
                     observers=data.read_bits(2),
                     user_difficulty=data.read_bits(2),
-                    client_debug_flags=data.read_uint64()
-                    if replay.base_build >= 22612
-                    else None,
-                    build_coach_enabled=data.read_bool()
-                    if replay.base_build >= 59587
-                    else None,
+                    client_debug_flags=(
+                        data.read_uint64() if replay.base_build >= 22612 else None
+                    ),
+                    build_coach_enabled=(
+                        data.read_bool() if replay.base_build >= 59587 else None
+                    ),
                 ),
                 game_speed=data.read_bits(3),
                 game_type=data.read_bits(3),
@@ -122,9 +145,11 @@ class InitDataReader:
                 max_observers=data.read_bits(5),
                 max_players=data.read_bits(5),
                 max_teams=data.read_bits(4) + 1,
-                max_colors=data.read_bits(6)
-                if replay.base_build >= 17266
-                else data.read_bits(5) + 1,
+                max_colors=(
+                    data.read_bits(6)
+                    if replay.base_build >= 17266
+                    else data.read_bits(5) + 1
+                ),
                 max_races=data.read_uint8() + 1,
                 max_controls=data.read_uint8()
                 + (0 if replay.base_build >= 26490 else 1),
@@ -141,36 +166,40 @@ class InitDataReader:
                         allowedDifficulty=data.read_bits(data.read_bits(6)),
                         allowedControls=data.read_bits(data.read_uint8()),
                         allowed_observe_types=data.read_bits(data.read_bits(2)),
-                        allowed_ai_builds=data.read_bits(
-                            data.read_bits(8 if replay.base_build >= 38749 else 7)
-                        )
-                        if replay.base_build >= 23925
-                        else None,
+                        allowed_ai_builds=(
+                            data.read_bits(
+                                data.read_bits(8 if replay.base_build >= 38749 else 7)
+                            )
+                            if replay.base_build >= 23925
+                            else None
+                        ),
                     )
                     for i in range(data.read_bits(5))
                 ],
                 default_difficulty=data.read_bits(6),
-                default_ai_build=data.read_bits(8 if replay.base_build >= 38749 else 7)
-                if replay.base_build >= 23925
-                else None,
+                default_ai_build=(
+                    data.read_bits(8 if replay.base_build >= 38749 else 7)
+                    if replay.base_build >= 23925
+                    else None
+                ),
                 cache_handles=[
                     DepotFile(data.read_aligned_bytes(40))
                     for i in range(
                         data.read_bits(6 if replay.base_build >= 21955 else 4)
                     )
                 ],
-                has_extension_mod=data.read_bool()
-                if replay.base_build >= 27950
-                else None,
-                has_nonBlizzardExtensionMod=data.read_bool()
-                if replay.base_build >= 42932
-                else None,
+                has_extension_mod=(
+                    data.read_bool() if replay.base_build >= 27950 else None
+                ),
+                has_nonBlizzardExtensionMod=(
+                    data.read_bool() if replay.base_build >= 42932 else None
+                ),
                 is_blizzardMap=data.read_bool(),
                 is_premade_ffa=data.read_bool(),
                 is_coop_mode=data.read_bool() if replay.base_build >= 23925 else None,
-                is_realtime_mode=data.read_bool()
-                if replay.base_build >= 54518
-                else None,
+                is_realtime_mode=(
+                    data.read_bool() if replay.base_build >= 54518 else None
+                ),
             ),
             lobby_state=dict(
                 phase=data.read_bits(3),
@@ -184,131 +213,158 @@ class InitDataReader:
                         colorPref=data.read_bits(5) if data.read_bool() else None,
                         race_pref=data.read_uint8() if data.read_bool() else None,
                         difficulty=data.read_bits(6),
-                        ai_build=data.read_bits(8 if replay.base_build >= 38749 else 7)
-                        if replay.base_build >= 23925
-                        else None,
+                        ai_build=(
+                            data.read_bits(8 if replay.base_build >= 38749 else 7)
+                            if replay.base_build >= 23925
+                            else None
+                        ),
                         handicap=data.read_bits(
                             32 if replay.base_build >= 80669 else 7
                         ),
                         observe=data.read_bits(2),
-                        logo_index=data.read_uint32()
-                        if replay.base_build >= 32283
-                        else None,
-                        hero=data.read_aligned_string(data.read_bits(9))
-                        if replay.base_build >= 34784
-                        else None,
-                        skin=data.read_aligned_string(data.read_bits(9))
-                        if replay.base_build >= 34784
-                        else None,
-                        mount=data.read_aligned_string(data.read_bits(9))
-                        if replay.base_build >= 34784
-                        else None,
-                        artifacts=[
-                            dict(
-                                type_struct=data.read_aligned_string(data.read_bits(9))
-                            )
-                            for i in range(data.read_bits(4))
-                        ]
-                        if replay.base_build >= 34784
-                        else None,
-                        working_set_slot_id=data.read_uint8()
-                        if replay.base_build >= 24764 and data.read_bool()
-                        else None,
+                        logo_index=(
+                            data.read_uint32() if replay.base_build >= 32283 else None
+                        ),
+                        hero=(
+                            data.read_aligned_string(data.read_bits(9))
+                            if replay.base_build >= 34784
+                            else None
+                        ),
+                        skin=(
+                            data.read_aligned_string(data.read_bits(9))
+                            if replay.base_build >= 34784
+                            else None
+                        ),
+                        mount=(
+                            data.read_aligned_string(data.read_bits(9))
+                            if replay.base_build >= 34784
+                            else None
+                        ),
+                        artifacts=(
+                            [
+                                dict(
+                                    type_struct=data.read_aligned_string(
+                                        data.read_bits(9)
+                                    )
+                                )
+                                for i in range(data.read_bits(4))
+                            ]
+                            if replay.base_build >= 34784
+                            else None
+                        ),
+                        working_set_slot_id=(
+                            data.read_uint8()
+                            if replay.base_build >= 24764 and data.read_bool()
+                            else None
+                        ),
                         rewards=[
                             data.read_uint32()
                             for i in range(
                                 data.read_bits(
                                     17
                                     if replay.base_build >= 34784
-                                    else 6
-                                    if replay.base_build >= 24764
-                                    else 5
+                                    else 6 if replay.base_build >= 24764 else 5
                                 )
                             )
                         ],
-                        toon_handle=data.read_aligned_string(data.read_bits(7))
-                        if replay.base_build >= 17266
-                        else None,
-                        licenses=[
-                            data.read_uint32()
-                            for i in range(
-                                data.read_bits(
-                                    16
-                                    if replay.base_build >= 77379
-                                    else 13
-                                    if replay.base_build >= 70154
-                                    else 9
-                                )
-                            )
-                        ]
-                        if replay.base_build >= 19132
-                        else [],
-                        tandem_leader_user_id=data.read_bits(4)
-                        if replay.base_build >= 34784 and data.read_bool()
-                        else None,
-                        commander=data.read_aligned_bytes(data.read_bits(9))
-                        if replay.base_build >= 34784
-                        else None,
-                        commander_level=data.read_uint32()
-                        if replay.base_build >= 36442
-                        else None,
-                        has_silence_penalty=data.read_bool()
-                        if replay.base_build >= 38215
-                        else None,
-                        tandem_id=data.read_bits(4)
-                        if replay.base_build >= 39576 and data.read_bool()
-                        else None,
-                        commander_mastery_level=data.read_uint32()
-                        if replay.base_build >= 42932
-                        else None,
-                        commander_mastery_talents=[
-                            data.read_uint32() for i in range(data.read_bits(3))
-                        ]
-                        if replay.base_build >= 42932
-                        else None,
-                        trophy_id=data.read_uint32()
-                        if replay.base_build >= 75689
-                        else None,
-                        reward_overrides=[
+                        toon_handle=(
+                            data.read_aligned_string(data.read_bits(7))
+                            if replay.base_build >= 17266
+                            else None
+                        ),
+                        licenses=(
                             [
-                                data.read_uint32(),
-                                [data.read_uint32() for i in range(data.read_bits(17))],
+                                data.read_uint32()
+                                for i in range(
+                                    data.read_bits(
+                                        16
+                                        if replay.base_build >= 77379
+                                        else 13 if replay.base_build >= 70154 else 9
+                                    )
+                                )
                             ]
-                            for j in range(data.read_bits(17))
-                        ]
-                        if replay.base_build >= 47185
-                        else None,
-                        brutal_plus_difficulty=data.read_uint32()
-                        if replay.base_build >= 77379
-                        else None,
-                        retry_mutation_indexes=[
-                            data.read_uint32() for i in range(data.read_bits(3))
-                        ]
-                        if replay.base_build >= 77379
-                        else None,
-                        ac_enemy_race=data.read_uint32()
-                        if replay.base_build >= 77379
-                        else None,
-                        ac_enemy_wave_type=data.read_uint32()
-                        if replay.base_build >= 77379
-                        else None,
-                        selected_commander_prestige=data.read_uint32()
-                        if replay.base_build >= 80871
-                        else None,
+                            if replay.base_build >= 19132
+                            else []
+                        ),
+                        tandem_leader_user_id=(
+                            data.read_bits(4)
+                            if replay.base_build >= 34784 and data.read_bool()
+                            else None
+                        ),
+                        commander=(
+                            data.read_aligned_bytes(data.read_bits(9))
+                            if replay.base_build >= 34784
+                            else None
+                        ),
+                        commander_level=(
+                            data.read_uint32() if replay.base_build >= 36442 else None
+                        ),
+                        has_silence_penalty=(
+                            data.read_bool() if replay.base_build >= 38215 else None
+                        ),
+                        tandem_id=(
+                            data.read_bits(4)
+                            if replay.base_build >= 39576 and data.read_bool()
+                            else None
+                        ),
+                        commander_mastery_level=(
+                            data.read_uint32() if replay.base_build >= 42932 else None
+                        ),
+                        commander_mastery_talents=(
+                            [data.read_uint32() for i in range(data.read_bits(3))]
+                            if replay.base_build >= 42932
+                            else None
+                        ),
+                        trophy_id=(
+                            data.read_uint32() if replay.base_build >= 75689 else None
+                        ),
+                        reward_overrides=(
+                            [
+                                [
+                                    data.read_uint32(),
+                                    [
+                                        data.read_uint32()
+                                        for i in range(data.read_bits(17))
+                                    ],
+                                ]
+                                for j in range(data.read_bits(17))
+                            ]
+                            if replay.base_build >= 47185
+                            else None
+                        ),
+                        brutal_plus_difficulty=(
+                            data.read_uint32() if replay.base_build >= 77379 else None
+                        ),
+                        retry_mutation_indexes=(
+                            [data.read_uint32() for i in range(data.read_bits(3))]
+                            if replay.base_build >= 77379
+                            else None
+                        ),
+                        ac_enemy_race=(
+                            data.read_uint32() if replay.base_build >= 77379 else None
+                        ),
+                        ac_enemy_wave_type=(
+                            data.read_uint32() if replay.base_build >= 77379 else None
+                        ),
+                        selected_commander_prestige=(
+                            data.read_uint32() if replay.base_build >= 80871 else None
+                        ),
                     )
                     for i in range(data.read_bits(5))
                 ],
                 random_seed=data.read_uint32(),
                 host_user_id=data.read_bits(4) if data.read_bool() else None,
                 is_single_player=data.read_bool(),
-                picked_map_tag=data.read_uint8()
-                if replay.base_build >= 36442
-                else None,
+                picked_map_tag=(
+                    data.read_uint8() if replay.base_build >= 36442 else None
+                ),
                 game_duration=data.read_uint32(),
                 default_difficulty=data.read_bits(6),
-                default_ai_build=data.read_bits(8 if replay.base_build >= 38749 else 7)
-                if replay.base_build >= 24764
-                else None,
+                default_ai_build=(
+                    data.read_bits(8 if replay.base_build >= 38749 else 7)
+                    if replay.base_build >= 24764
+                    else None
+                ),
             ),
         )
         if not data.done():
@@ -356,9 +412,9 @@ class DetailsReader:
                     observe=p[7],
                     result=p[8],
                     working_set_slot=p[9] if replay.build >= 24764 else None,
-                    hero=p[10]
-                    if replay.build >= 34784 and 10 in p
-                    else None,  # hero appears to be present in Heroes replays but not StarCraft 2 replays
+                    hero=(
+                        p[10] if replay.build >= 34784 and 10 in p else None
+                    ),  # hero appears to be present in Heroes replays but not StarCraft 2 replays
                 )
                 for p in details[0]
             ],
@@ -375,9 +431,11 @@ class DetailsReader:
             mini_save=details[11],
             game_speed=details[12],
             default_difficulty=details[13],
-            mod_paths=details[14]
-            if (replay.build >= 22612 and replay.versions[1] == 1)
-            else None,
+            mod_paths=(
+                details[14]
+                if (replay.build >= 22612 and replay.versions[1] == 1)
+                else None
+            ),
             campaign_index=details[15] if replay.versions[1] == 2 else None,
             restartAsTransitionMap=details[16] if replay.build > 26490 else None,
         )
@@ -462,7 +520,7 @@ class GameEventsReader_Base:
             52: (None, self.trigger_purchase_exit_event),
             53: (None, self.trigger_planet_mission_launched_event),
             54: (None, self.trigger_planet_panel_canceled_event),
-            55: (None, self.trigger_dialog_control_event),
+            55: (DialogControlEvent, self.trigger_dialog_control_event),
             56: (None, self.trigger_sound_length_sync_event),
             57: (None, self.trigger_conversation_skipped_event),
             58: (None, self.trigger_mouse_clicked_event),
@@ -738,9 +796,11 @@ class GameEventsReader_15405(GameEventsReader_Base):
         return dict(
             control_group_index=data.read_bits(4),
             control_group_update=data.read_bits(2),
-            remove_mask=("Mask", self.read_selection_bitmask(data, data.read_uint8()))
-            if data.read_bool()
-            else ("None", None),
+            remove_mask=(
+                ("Mask", self.read_selection_bitmask(data, data.read_uint8()))
+                if data.read_bool()
+                else ("None", None)
+            ),
         )
 
     def selection_sync_check_event(self, data):
@@ -1003,13 +1063,17 @@ class GameEventsReader_16561(GameEventsReader_15405):
     def command_event(self, data):
         return dict(
             flags=data.read_bits(17),
-            ability=dict(
-                ability_link=data.read_uint16(),
-                ability_command_index=data.read_bits(5),
-                ability_command_data=data.read_uint8() if data.read_bool() else None,
-            )
-            if data.read_bool()
-            else None,
+            ability=(
+                dict(
+                    ability_link=data.read_uint16(),
+                    ability_command_index=data.read_bits(5),
+                    ability_command_data=(
+                        data.read_uint8() if data.read_bool() else None
+                    ),
+                )
+                if data.read_bool()
+                else None
+            ),
             data={  # Choice
                 0: lambda: ("None", None),
                 1: lambda: (
@@ -1030,9 +1094,9 @@ class GameEventsReader_16561(GameEventsReader_15405):
                         unit_tag=data.read_uint32(),
                         unit_link=data.read_uint16(),
                         control_player_id=None,
-                        upkeep_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
+                        upkeep_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
                         point=dict(
                             x=data.read_bits(20),
                             y=data.read_bits(20),
@@ -1158,13 +1222,17 @@ class GameEventsReader_18574(GameEventsReader_18092):
     def command_event(self, data):
         return dict(
             flags=data.read_bits(18),
-            ability=dict(
-                ability_link=data.read_uint16(),
-                ability_command_index=data.read_bits(5),
-                ability_command_data=data.read_uint8() if data.read_bool() else None,
-            )
-            if data.read_bool()
-            else None,
+            ability=(
+                dict(
+                    ability_link=data.read_uint16(),
+                    ability_command_index=data.read_bits(5),
+                    ability_command_data=(
+                        data.read_uint8() if data.read_bool() else None
+                    ),
+                )
+                if data.read_bool()
+                else None
+            ),
             data={  # Choice
                 0: lambda: ("None", None),
                 1: lambda: (
@@ -1185,9 +1253,9 @@ class GameEventsReader_18574(GameEventsReader_18092):
                         unit_tag=data.read_uint32(),
                         unit_link=data.read_uint16(),
                         control_player_id=None,
-                        upkeep_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
+                        upkeep_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
                         point=dict(
                             x=data.read_bits(20),
                             y=data.read_bits(20),
@@ -1209,13 +1277,17 @@ class GameEventsReader_19595(GameEventsReader_19132):
     def command_event(self, data):
         return dict(
             flags=data.read_bits(18),
-            ability=dict(
-                ability_link=data.read_uint16(),
-                ability_command_index=data.read_bits(5),
-                ability_command_data=data.read_uint8() if data.read_bool() else None,
-            )
-            if data.read_bool()
-            else None,
+            ability=(
+                dict(
+                    ability_link=data.read_uint16(),
+                    ability_command_index=data.read_bits(5),
+                    ability_command_data=(
+                        data.read_uint8() if data.read_bool() else None
+                    ),
+                )
+                if data.read_bool()
+                else None
+            ),
             data={  # Choice
                 0: lambda: ("None", None),
                 1: lambda: (
@@ -1235,12 +1307,12 @@ class GameEventsReader_19595(GameEventsReader_19132):
                         timer=data.read_uint8(),
                         unit_tag=data.read_uint32(),
                         unit_link=data.read_uint16(),
-                        control_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
-                        upkeep_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
+                        control_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
+                        upkeep_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
                         point=dict(
                             x=data.read_bits(20),
                             y=data.read_bits(20),
@@ -1306,13 +1378,17 @@ class GameEventsReader_22612(GameEventsReader_21029):
     def command_event(self, data):
         return dict(
             flags=data.read_bits(20),
-            ability=dict(
-                ability_link=data.read_uint16(),
-                ability_command_index=data.read_bits(5),
-                ability_command_data=data.read_uint8() if data.read_bool() else None,
-            )
-            if data.read_bool()
-            else None,
+            ability=(
+                dict(
+                    ability_link=data.read_uint16(),
+                    ability_command_index=data.read_bits(5),
+                    ability_command_data=(
+                        data.read_uint8() if data.read_bool() else None
+                    ),
+                )
+                if data.read_bool()
+                else None
+            ),
             data={  # Choice
                 0: lambda: ("None", None),
                 1: lambda: (
@@ -1332,12 +1408,12 @@ class GameEventsReader_22612(GameEventsReader_21029):
                         timer=data.read_uint8(),
                         unit_tag=data.read_uint32(),
                         unit_link=data.read_uint16(),
-                        control_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
-                        upkeep_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
+                        control_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
+                        upkeep_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
                         point=dict(
                             x=data.read_bits(20),
                             y=data.read_bits(20),
@@ -1543,9 +1619,11 @@ class GameEventsReader_HotSBeta(GameEventsReader_23260):
 
     def camera_update_event(self, data):
         return dict(
-            target=dict(x=data.read_uint16(), y=data.read_uint16())
-            if data.read_bool()
-            else None,
+            target=(
+                dict(x=data.read_uint16(), y=data.read_uint16())
+                if data.read_bool()
+                else None
+            ),
             distance=data.read_uint16() if data.read_bool() else None,
             pitch=data.read_uint16() if data.read_bool() else None,
             yaw=data.read_uint16() if data.read_bool() else None,
@@ -1617,12 +1695,16 @@ class GameEventsReader_24247(GameEventsReader_HotSBeta):
                     game_user_id=data.read_bits(4),
                     observe=data.read_bits(2),
                     name=data.read_aligned_string(data.read_uint8()),
-                    toon_handle=data.read_aligned_string(data.read_bits(7))
-                    if data.read_bool()
-                    else None,
-                    clan_tag=data.read_aligned_string(data.read_uint8())
-                    if data.read_bool()
-                    else None,
+                    toon_handle=(
+                        data.read_aligned_string(data.read_bits(7))
+                        if data.read_bool()
+                        else None
+                    ),
+                    clan_tag=(
+                        data.read_aligned_string(data.read_uint8())
+                        if data.read_bool()
+                        else None
+                    ),
                     clan_logo=None,
                 )
                 for i in range(data.read_bits(5))
@@ -1632,9 +1714,11 @@ class GameEventsReader_24247(GameEventsReader_HotSBeta):
 
     def camera_update_event(self, data):
         return dict(
-            target=dict(x=data.read_uint16(), y=data.read_uint16())
-            if data.read_bool()
-            else None,
+            target=(
+                dict(x=data.read_uint16(), y=data.read_uint16())
+                if data.read_bool()
+                else None
+            ),
             distance=data.read_uint16() if data.read_bool() else None,
             pitch=data.read_uint16() if data.read_bool() else None,
             yaw=data.read_uint16() if data.read_bool() else None,
@@ -1655,12 +1739,16 @@ class GameEventsReader_24247(GameEventsReader_HotSBeta):
         return dict(
             observe=data.read_bits(2),
             name=data.read_aligned_string(data.read_bits(8)),
-            toon_handle=data.read_aligned_string(data.read_bits(7))
-            if data.read_bool()
-            else None,
-            clan_tag=data.read_aligned_string(data.read_uint8())
-            if data.read_bool()
-            else None,
+            toon_handle=(
+                data.read_aligned_string(data.read_bits(7))
+                if data.read_bool()
+                else None
+            ),
+            clan_tag=(
+                data.read_aligned_string(data.read_uint8())
+                if data.read_bool()
+                else None
+            ),
             clan_log=None,
         )
 
@@ -1712,15 +1800,21 @@ class GameEventsReader_27950(GameEventsReader_26490):
                     game_user_id=data.read_bits(4),
                     observe=data.read_bits(2),
                     name=data.read_aligned_string(data.read_uint8()),
-                    toon_handle=data.read_aligned_string(data.read_bits(7))
-                    if data.read_bool()
-                    else None,
-                    clan_tag=data.read_aligned_string(data.read_uint8())
-                    if data.read_bool()
-                    else None,
-                    clan_logo=DepotFile(data.read_aligned_bytes(40))
-                    if data.read_bool()
-                    else None,
+                    toon_handle=(
+                        data.read_aligned_string(data.read_bits(7))
+                        if data.read_bool()
+                        else None
+                    ),
+                    clan_tag=(
+                        data.read_aligned_string(data.read_uint8())
+                        if data.read_bool()
+                        else None
+                    ),
+                    clan_logo=(
+                        DepotFile(data.read_aligned_bytes(40))
+                        if data.read_bool()
+                        else None
+                    ),
                 )
                 for i in range(data.read_bits(5))
             ],
@@ -1729,9 +1823,11 @@ class GameEventsReader_27950(GameEventsReader_26490):
 
     def camera_update_event(self, data):
         return dict(
-            target=dict(x=data.read_uint16(), y=data.read_uint16())
-            if data.read_bool()
-            else None,
+            target=(
+                dict(x=data.read_uint16(), y=data.read_uint16())
+                if data.read_bool()
+                else None
+            ),
             distance=data.read_uint16() if data.read_bool() else None,
             pitch=data.read_uint16() if data.read_bool() else None,
             yaw=data.read_uint16() if data.read_bool() else None,
@@ -1742,15 +1838,19 @@ class GameEventsReader_27950(GameEventsReader_26490):
         return dict(
             observe=data.read_bits(2),
             name=data.read_aligned_string(data.read_bits(8)),
-            toon_handle=data.read_aligned_string(data.read_bits(7))
-            if data.read_bool()
-            else None,
-            clan_tag=data.read_aligned_string(data.read_uint8())
-            if data.read_bool()
-            else None,
-            clan_logo=DepotFile(data.read_aligned_bytes(40))
-            if data.read_bool()
-            else None,
+            toon_handle=(
+                data.read_aligned_string(data.read_bits(7))
+                if data.read_bool()
+                else None
+            ),
+            clan_tag=(
+                data.read_aligned_string(data.read_uint8())
+                if data.read_bool()
+                else None
+            ),
+            clan_logo=(
+                DepotFile(data.read_aligned_bytes(40)) if data.read_bool() else None
+            ),
         )
 
 
@@ -1870,13 +1970,17 @@ class GameEventsReader_34784(GameEventsReader_27950):
     def command_event(self, data):
         return dict(
             flags=data.read_bits(23),
-            ability=dict(
-                ability_link=data.read_uint16(),
-                ability_command_index=data.read_bits(5),
-                ability_command_data=data.read_uint8() if data.read_bool() else None,
-            )
-            if data.read_bool()
-            else None,
+            ability=(
+                dict(
+                    ability_link=data.read_uint16(),
+                    ability_command_index=data.read_bits(5),
+                    ability_command_data=(
+                        data.read_uint8() if data.read_bool() else None
+                    ),
+                )
+                if data.read_bool()
+                else None
+            ),
             data={  # Choice
                 0: lambda: ("None", None),
                 1: lambda: (
@@ -1896,12 +2000,12 @@ class GameEventsReader_34784(GameEventsReader_27950):
                         timer=data.read_uint8(),
                         unit_tag=data.read_uint32(),
                         unit_link=data.read_uint16(),
-                        control_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
-                        upkeep_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
+                        control_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
+                        upkeep_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
                         point=dict(
                             x=data.read_bits(20),
                             y=data.read_bits(20),
@@ -1948,9 +2052,11 @@ class GameEventsReader_34784(GameEventsReader_27950):
 
     def camera_update_event(self, data):
         return dict(
-            target=dict(x=data.read_uint16(), y=data.read_uint16())
-            if data.read_bool()
-            else None,
+            target=(
+                dict(x=data.read_uint16(), y=data.read_uint16())
+                if data.read_bool()
+                else None
+            ),
             distance=data.read_uint16() if data.read_bool() else None,
             pitch=data.read_uint16() if data.read_bool() else None,
             yaw=data.read_uint16() if data.read_bool() else None,
@@ -1965,15 +2071,19 @@ class GameEventsReader_34784(GameEventsReader_27950):
         return dict(
             observe=data.read_bits(2),
             name=data.read_aligned_string(data.read_bits(8)),
-            toon_handle=data.read_aligned_string(data.read_bits(7))
-            if data.read_bool()
-            else None,
-            clan_tag=data.read_aligned_string(data.read_uint8())
-            if data.read_bool()
-            else None,
-            clan_logo=DepotFile(data.read_aligned_bytes(40))
-            if data.read_bool()
-            else None,
+            toon_handle=(
+                data.read_aligned_string(data.read_bits(7))
+                if data.read_bool()
+                else None
+            ),
+            clan_tag=(
+                data.read_aligned_string(data.read_uint8())
+                if data.read_bool()
+                else None
+            ),
+            clan_logo=(
+                DepotFile(data.read_aligned_bytes(40)) if data.read_bool() else None
+            ),
             hijack=data.read_bool(),
             hijack_clone_game_user_id=data.read_bits(4) if data.read_bool() else None,
         )
@@ -2019,13 +2129,17 @@ class GameEventsReader_38215(GameEventsReader_36442):
     def trigger_command_error_event(self, data):
         return dict(
             error=data.read_uint32() - 2147483648,
-            ability=dict(
-                ability_link=data.read_uint16(),
-                ability_command_index=data.read_bits(5),
-                ability_command_data=data.read_uint8() if data.read_bool() else None,
-            )
-            if data.read_bool()
-            else None,
+            ability=(
+                dict(
+                    ability_link=data.read_uint16(),
+                    ability_command_index=data.read_bits(5),
+                    ability_command_data=(
+                        data.read_uint8() if data.read_bool() else None
+                    ),
+                )
+                if data.read_bool()
+                else None
+            ),
         )
 
     def trigger_mousewheel_event(self, data):
@@ -2040,13 +2154,17 @@ class GameEventsReader_38215(GameEventsReader_36442):
         # with the only change being that flags now has 25 bits instead of 23.
         return dict(
             flags=data.read_bits(25),
-            ability=dict(
-                ability_link=data.read_uint16(),
-                ability_command_index=data.read_bits(5),
-                ability_command_data=data.read_uint8() if data.read_bool() else None,
-            )
-            if data.read_bool()
-            else None,
+            ability=(
+                dict(
+                    ability_link=data.read_uint16(),
+                    ability_command_index=data.read_bits(5),
+                    ability_command_data=(
+                        data.read_uint8() if data.read_bool() else None
+                    ),
+                )
+                if data.read_bool()
+                else None
+            ),
             data={  # Choice
                 0: lambda: ("None", None),
                 1: lambda: (
@@ -2066,12 +2184,12 @@ class GameEventsReader_38215(GameEventsReader_36442):
                         timer=data.read_uint8(),
                         unit_tag=data.read_uint32(),
                         unit_link=data.read_uint16(),
-                        control_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
-                        upkeep_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
+                        control_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
+                        upkeep_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
                         point=dict(
                             x=data.read_bits(20),
                             y=data.read_bits(20),
@@ -2154,13 +2272,17 @@ class GameEventsReader_64469(GameEventsReader_38996):
     def command_event(self, data):
         return dict(
             flags=data.read_bits(26),
-            ability=dict(
-                ability_link=data.read_uint16(),
-                ability_command_index=data.read_bits(5),
-                ability_command_data=data.read_uint8() if data.read_bool() else None,
-            )
-            if data.read_bool()
-            else None,
+            ability=(
+                dict(
+                    ability_link=data.read_uint16(),
+                    ability_command_index=data.read_bits(5),
+                    ability_command_data=(
+                        data.read_uint8() if data.read_bool() else None
+                    ),
+                )
+                if data.read_bool()
+                else None
+            ),
             data={  # Choice
                 0: lambda: ("None", None),
                 1: lambda: (
@@ -2180,12 +2302,12 @@ class GameEventsReader_64469(GameEventsReader_38996):
                         timer=data.read_uint8(),
                         unit_tag=data.read_uint32(),
                         unit_link=data.read_uint16(),
-                        control_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
-                        upkeep_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
+                        control_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
+                        upkeep_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
                         point=dict(
                             x=data.read_bits(20),
                             y=data.read_bits(20),
@@ -2232,13 +2354,17 @@ class GameEventsReader_80669(GameEventsReader_65895):
     def command_event(self, data):
         return dict(
             flags=data.read_bits(27),
-            ability=dict(
-                ability_link=data.read_uint16(),
-                ability_command_index=data.read_bits(5),
-                ability_command_data=data.read_uint8() if data.read_bool() else None,
-            )
-            if data.read_bool()
-            else None,
+            ability=(
+                dict(
+                    ability_link=data.read_uint16(),
+                    ability_command_index=data.read_bits(5),
+                    ability_command_data=(
+                        data.read_uint8() if data.read_bool() else None
+                    ),
+                )
+                if data.read_bool()
+                else None
+            ),
             data={  # Choice
                 0: lambda: ("None", None),
                 1: lambda: (
@@ -2258,12 +2384,12 @@ class GameEventsReader_80669(GameEventsReader_65895):
                         timer=data.read_uint8(),
                         unit_tag=data.read_uint32(),
                         unit_link=data.read_uint16(),
-                        control_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
-                        upkeep_player_id=data.read_bits(4)
-                        if data.read_bool()
-                        else None,
+                        control_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
+                        upkeep_player_id=(
+                            data.read_bits(4) if data.read_bool() else None
+                        ),
                         point=dict(
                             x=data.read_bits(20),
                             y=data.read_bits(20),

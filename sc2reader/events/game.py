@@ -765,3 +765,22 @@ class HijackReplayGameEvent(GameEvent):
 
         #: Information on the users hijacking the game
         self.user_infos = data["user_infos"]
+
+
+@loggable
+class DialogControlEvent(GameEvent):
+    """
+    Generated when a dialog is interacted with.
+    """
+
+    def __init__(self, frame, pid, data):
+        super().__init__(frame, pid)
+
+        #: Identifier for the dialog
+        self.control_id = data["control_id"]
+
+        #: How dialog was interacted with
+        self.event_type = data["event_type"]
+
+        #: Data specific to event type such as changes or clicks
+        self.event_data = data["event_data"]
